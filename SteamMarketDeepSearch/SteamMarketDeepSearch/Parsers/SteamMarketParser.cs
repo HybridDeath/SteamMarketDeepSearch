@@ -24,6 +24,12 @@ namespace SteamMarketDeepSearch.Parsers
                 Debug.WriteLine(
                     "STRHASH NOT FOUND");
 
+                Debug.WriteLine(
+                    "HTML LENGTH: " + html.Length);
+
+                Debug.WriteLine(
+                    html[..Math.Min(500, html.Length)]);
+
                 return results;
             }
 
