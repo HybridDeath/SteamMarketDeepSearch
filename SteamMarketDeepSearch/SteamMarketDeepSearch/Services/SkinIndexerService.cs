@@ -3,8 +3,6 @@ using SteamMarketDeepSearch.Models;
 using SteamMarketDeepSearch.Parsers;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SteamMarketDeepSearch.Services
@@ -27,6 +25,7 @@ namespace SteamMarketDeepSearch.Services
 
             List<SkinDefinition> indexedSkins = [];
 
+            HashSet<string> indexedNames = [];
 
             foreach (WeaponCatalogEntry weapon in catalog)
             {
@@ -38,9 +37,9 @@ namespace SteamMarketDeepSearch.Services
 
 
                 string url =
-                    $"{SteamConstants.MarketSearchUrl}" +
+                    $"{SteamMarketConstants.MarketSearchUrl}" +
                     $"?category_Weapon={weapon.MarketQuery}" +
-                    $"&appid={SteamConstants.AppId}";
+                    $"&appid={SteamMarketConstants.AppId}";
 
 
                 List<MarketSkinData> skins =
@@ -55,8 +54,12 @@ namespace SteamMarketDeepSearch.Services
                         continue;
                     }
 
-                    Debug.WriteLine(
-                        $"{skin.MarketHashName} | {skin.SellOrderCount} | {skin.MarketBucketId}");
+
+                    if (string.IsNullOrWhiteSpace(
+                        skin.MarketBucketId))
+                    {
+                        continue;
+                    }
 
 
                     string normalizedName =
@@ -64,32 +67,50 @@ namespace SteamMarketDeepSearch.Services
                             skin.MarketHashName);
 
 
-                    if (!indexedSkins.Any(
-                        x => x.MarketHashName == normalizedName))
+                    if (indexedNames.Contains(
+                        normalizedName))
                     {
-                        indexedSkins.Add(
-                            new SkinDefinition
-                            {
-                                WeaponType = weapon.WeaponType,
-
-                                MarketHashName =
-                                    normalizedName,
-
-                                MarketBucketId =
-                                    skin.MarketBucketId,
-
-                                SellOrderCount =
-                                    skin.SellOrderCount,
-
-                                CreatedAt =
-                                    DateTime.UtcNow,
-
-                                LastUpdatedAt =
-                                    DateTime.UtcNow
-                            });
+                        continue;
                     }
+
+
+                    DateTime now =
+                        DateTime.UtcNow;
+
+
+                    indexedSkins.Add(
+                        new SkinDefinition
+                        {
+                            WeaponType =
+                                weapon.WeaponType,
+
+
+                            MarketHashName =
+                                normalizedName,
+
+
+                            MarketBucketId =
+                                skin.MarketBucketId,
+
+
+                            SellOrderCount =
+                                skin.SellOrderCount,
+
+
+                            CreatedAt =
+                                now,
+
+
+                            LastUpdatedAt =
+                                now
+                        });
+
+
+                    indexedNames.Add(
+                        normalizedName);
                 }
             }
+
 
             return new SkinIndexResult
             {
@@ -97,23 +118,24 @@ namespace SteamMarketDeepSearch.Services
             };
         }
 
-        private static string NormalizeSkinName(string name)
+
+        private static string NormalizeSkinName(
+            string name)
         {
-            // Usuwanie StatTrak
-            name = name.Replace(
-                "StatTrak™ ",
-                "",
-                StringComparison.Ordinal);
+            name =
+                name.Replace(
+                    "StatTrak™ ",
+                    "",
+                    StringComparison.Ordinal);
 
 
-            // Usuwanie Souvenir
-            name = name.Replace(
-                "Souvenir ",
-                "",
-                StringComparison.Ordinal);
+            name =
+                name.Replace(
+                    "Souvenir ",
+                    "",
+                    StringComparison.Ordinal);
 
 
-            // Usuwanie wear condition
             string[] conditions =
             [
                 " (Factory New)",
@@ -126,9 +148,13 @@ namespace SteamMarketDeepSearch.Services
 
             foreach (string condition in conditions)
             {
-                if (name.EndsWith(condition))
+                if (name.EndsWith(
+                    condition,
+                    StringComparison.Ordinal))
                 {
-                    name = name[..^condition.Length];
+                    name =
+                        name[..^condition.Length];
+
                     break;
                 }
             }
@@ -137,6 +163,7 @@ namespace SteamMarketDeepSearch.Services
             return name.Trim();
         }
 
+
         private async Task<List<MarketSkinData>> DownloadAllPagesAsync(
             string url)
         {
@@ -144,6 +171,7 @@ namespace SteamMarketDeepSearch.Services
 
 
             int start = 0;
+
 
             const int pageSize = 100;
 
@@ -155,11 +183,13 @@ namespace SteamMarketDeepSearch.Services
 
 
                 string html =
-                    await _client.GetMarketPageAsync(pageUrl);
+                    await _client.GetMarketPageAsync(
+                        pageUrl);
 
 
                 List<MarketSkinData> page =
-                    SteamMarketParser.ParseListings(html);
+                    SteamMarketParser.ParseListings(
+                        html);
 
 
                 if (page.Count == 0)
@@ -168,7 +198,8 @@ namespace SteamMarketDeepSearch.Services
                 }
 
 
-                allSkins.AddRange(page);
+                allSkins.AddRange(
+                    page);
 
 
                 if (page.Count < pageSize)
