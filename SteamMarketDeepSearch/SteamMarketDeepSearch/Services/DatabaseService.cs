@@ -44,7 +44,7 @@ namespace SteamMarketDeepSearch.Services
 
                 WeaponType INTEGER NOT NULL,
 
-                MarketListingId TEXT NOT NULL UNIQUE,
+                MarketBucketId TEXT NOT NULL UNIQUE,
 
                 CreatedAt TEXT NOT NULL
             );
@@ -78,14 +78,14 @@ namespace SteamMarketDeepSearch.Services
                 (
                     MarketHashName,
                     WeaponType,
-                    MarketListingId,
+                    MarketBucketId,
                     CreatedAt
                 )
                 VALUES
                 (
                     @name,
                     @weapon,
-                    @listing,
+                    @bucket,
                     @created
                 );
                 """;
@@ -99,8 +99,8 @@ namespace SteamMarketDeepSearch.Services
                     (int)skin.WeaponType);
 
                 command.Parameters.AddWithValue(
-                    "@listing",
-                    skin.MarketListingId);
+                    "@bucket",
+                    skin.MarketBucketId);
 
                 command.Parameters.AddWithValue(
                     "@created",
@@ -138,7 +138,7 @@ namespace SteamMarketDeepSearch.Services
                         Id = reader.GetInt64(0),
                         MarketHashName = reader.GetString(1),
                         WeaponType = (Enums.WeaponType)reader.GetInt32(2),
-                        MarketListingId = reader.GetString(3),
+                        MarketBucketId = reader.GetString(3),
                         CreatedAt = DateTime.Parse(reader.GetString(4))
                     });
             }
