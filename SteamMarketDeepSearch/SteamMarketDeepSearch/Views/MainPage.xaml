@@ -8,7 +8,28 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
-        
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto" Padding="15">
+
+        <Button
+        Grid.Row="0"
+        x:Name="IndexButton"
+        Content="Index all skins"
+        Click="IndexButton_Click"/>
+
+        <TextBlock
+            Grid.Row="1"
+            x:Name="LowestText"
+        />
+
+        <TextBlock
+            Grid.Row="2"
+            x:Name="HighestText"
+        />
+
+        <TextBlock
+            Grid.Row="3"
+            x:Name="DebugText"
+        />
+
     </Grid>
 </Page>
