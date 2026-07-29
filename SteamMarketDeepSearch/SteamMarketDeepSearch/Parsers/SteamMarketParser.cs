@@ -6,10 +6,17 @@ using System.Text.RegularExpressions;
 
 namespace SteamMarketDeepSearch.Parsers
 {
-    public partial class SteamMarketParser
+    public static partial class SteamMarketParser
     {
-        private static readonly Regex ListingRegex =
-            new($@"{SteamConstants.MarketBaseUrl}/{SteamConstants.AppId}/([^?""\\]+)", RegexOptions.Compiled);
+        private static readonly Regex listingRegex =
+            new(
+                $@"{SteamConstants.MarketBaseUrl}/{SteamConstants.AppId}/([^?""\\]+)",
+                RegexOptions.Compiled
+            );
+
+
+        private static readonly Regex skinNameRegex =
+            SkinNameRegex();
 
 
         public static List<MarketSkinData> ParseListings(string html)
@@ -17,21 +24,43 @@ namespace SteamMarketDeepSearch.Parsers
             List<MarketSkinData> results = [];
 
 
-            foreach (Match match in ListingRegex.Matches(html))
+            MatchCollection listings =
+                listingRegex.Matches(html);
+
+
+            foreach (Match listingMatch in listings)
             {
-                string listingId = match.Groups[1].Value;
+                string listingId =
+                    listingMatch.Groups[1].Value;
+
+
+                string remainingHtml =
+                    html[listingMatch.Index..];
+
+
+                Match nameMatch =
+                    skinNameRegex.Match(remainingHtml);
+
+
+                string skinName =
+                    nameMatch.Success
+                        ? nameMatch.Groups[1].Value.Trim()
+                        : string.Empty;
 
 
                 results.Add(
                     new MarketSkinData
                     {
                         MarketListingId = listingId,
-                        MarketHashName = string.Empty
+                        MarketHashName = skinName
                     });
             }
 
 
             return results;
         }
+
+        [GeneratedRegex(@">([^<>]+ \| [^<>]+)<", RegexOptions.Compiled)]
+        private static partial Regex SkinNameRegex();
     }
 }
