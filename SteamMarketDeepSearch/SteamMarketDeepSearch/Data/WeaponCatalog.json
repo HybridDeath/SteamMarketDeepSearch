@@ -1,0 +1,332 @@
+[
+  {
+    "DisplayName": "Zeus-x27",
+    "Category": "Special",
+    "WeaponType": "Zeus_x27",
+    "MarketQuery": "weapon_taser"
+  },
+  {
+    "DisplayName": "Glock-18",
+    "Category": "Pistol",
+    "WeaponType": "Glock_18",
+    "MarketQuery": "weapon_glock"
+  },
+  {
+    "DisplayName": "USP-S",
+    "Category": "Pistol",
+    "WeaponType": "USP_S",
+    "MarketQuery": "weapon_usp_silencer"
+  },
+  {
+    "DisplayName": "P2000",
+    "Category": "Pistol",
+    "WeaponType": "P2000",
+    "MarketQuery": "weapon_hkp2000"
+  },
+  {
+    "DisplayName": "DualBerettas",
+    "Category": "Pistol",
+    "WeaponType": "DualBerettas",
+    "MarketQuery": "weapon_elite"
+  },
+  {
+    "DisplayName": "P250",
+    "Category": "Pistol",
+    "WeaponType": "P250",
+    "MarketQuery": "weapon_p250"
+  },
+  {
+    "DisplayName": "Five-SeveN",
+    "Category": "Pistol",
+    "WeaponType": "Five_SeveN",
+    "MarketQuery": "weapon_fiveseven"
+  },
+  {
+    "DisplayName": "Tec-9",
+    "Category": "Pistol",
+    "WeaponType": "Tec_9",
+    "MarketQuery": "weapon_tec9"
+  },
+  {
+    "DisplayName": "CZ75-Auto",
+    "Category": "Pistol",
+    "WeaponType": "CZ75_Auto",
+    "MarketQuery": "weapon_cz75a"
+  },
+  {
+    "DisplayName": "DesertEagle",
+    "Category": "Pistol",
+    "WeaponType": "DesertEagle",
+    "MarketQuery": "weapon_deagle"
+  },
+  {
+    "DisplayName": "R8Revolver",
+    "Category": "Pistol",
+    "WeaponType": "R8Revolver",
+    "MarketQuery": "weapon_revolver"
+  },
+  {
+    "DisplayName": "MAC10",
+    "Category": "SMG",
+    "WeaponType": "MAC10",
+    "MarketQuery": "weapon_mac10"
+  },
+  {
+    "DisplayName": "MP9",
+    "Category": "SMG",
+    "WeaponType": "MP9",
+    "MarketQuery": "weapon_mp9"
+  },
+  {
+    "DisplayName": "MP5SD",
+    "Category": "SMG",
+    "WeaponType": "MP5SD",
+    "MarketQuery": "weapon_mp5sd"
+  },
+  {
+    "DisplayName": "MP7",
+    "Category": "SMG",
+    "WeaponType": "MP7",
+    "MarketQuery": "weapon_mp7"
+  },
+  {
+    "DisplayName": "UMP45",
+    "Category": "SMG",
+    "WeaponType": "UMP45",
+    "MarketQuery": "weapon_ump45"
+  },
+  {
+    "DisplayName": "P90",
+    "Category": "SMG",
+    "WeaponType": "P90",
+    "MarketQuery": "weapon_p90"
+  },
+  {
+    "DisplayName": "PPBizon",
+    "Category": "SMG",
+    "WeaponType": "PPBizon",
+    "MarketQuery": "weapon_bizon"
+  },
+  {
+    "DisplayName": "AK-47",
+    "Category": "Rifle",
+    "WeaponType": "AK_47",
+    "MarketQuery": "weapon_ak47"
+  },
+  {
+    "DisplayName": "M4A4",
+    "Category": "Rifle",
+    "WeaponType": "M4A4",
+    "MarketQuery": "weapon_m4a1"
+  },
+  {
+    "DisplayName": "M4A1-S",
+    "Category": "Rifle",
+    "WeaponType": "M4A1_S",
+    "MarketQuery": "weapon_m4a1_silencer"
+  },
+  {
+    "DisplayName": "FAMAS",
+    "Category": "Rifle",
+    "WeaponType": "FAMAS",
+    "MarketQuery": "weapon_famas"
+  },
+  {
+    "DisplayName": "Galil-AR",
+    "Category": "Rifle",
+    "WeaponType": "Galil_AR",
+    "MarketQuery": "weapon_galilar"
+  },
+  {
+    "DisplayName": "AUG",
+    "Category": "Rifle",
+    "WeaponType": "AUG",
+    "MarketQuery": "weapon_aug"
+  },
+  {
+    "DisplayName": "SG-553",
+    "Category": "Rifle",
+    "WeaponType": "SG_553",
+    "MarketQuery": "weapon_sg556"
+  },
+  {
+    "DisplayName": "MAG-7",
+    "Category": "Shotgun",
+    "WeaponType": "MAG_7",
+    "MarketQuery": "weapon_mag7"
+  },
+  {
+    "DisplayName": "XM1014",
+    "Category": "Shotgun",
+    "WeaponType": "XM1014",
+    "MarketQuery": "weapon_xm1014"
+  },
+  {
+    "DisplayName": "Sawed-Off",
+    "Category": "Shotgun",
+    "WeaponType": "Sawed_Off",
+    "MarketQuery": "weapon_sawedoff"
+  },
+  {
+    "DisplayName": "Nova",
+    "Category": "Shotgun",
+    "WeaponType": "Nova",
+    "MarketQuery": "weapon_nova"
+  },
+  {
+    "DisplayName": "M249",
+    "Category": "MachineGun",
+    "WeaponType": "M249",
+    "MarketQuery": "weapon_m249"
+  },
+  {
+    "DisplayName": "Negev",
+    "Category": "MachineGun",
+    "WeaponType": "Negev",
+    "MarketQuery": "weapon_negev"
+  },
+  {
+    "DisplayName": "AWP",
+    "Category": "SniperRifle",
+    "WeaponType": "AWP",
+    "MarketQuery": "weapon_awp"
+  },
+  {
+    "DisplayName": "SSG-08",
+    "Category": "SniperRifle",
+    "WeaponType": "SSG_08",
+    "MarketQuery": "weapon_ssg08"
+  },
+  {
+    "DisplayName": "SCAR-20",
+    "Category": "SniperRifle",
+    "WeaponType": "SCAR_20",
+    "MarketQuery": "weapon_scar20"
+  },
+  {
+    "DisplayName": "G3SG1",
+    "Category": "SniperRifle",
+    "WeaponType": "G3SG1",
+    "MarketQuery": "weapon_g3sg1"
+  },
+  {
+    "DisplayName": "Bayonet",
+    "Category": "Knife",
+    "WeaponType": "Bayonet",
+    "MarketQuery": "weapon_bayonet"
+  },
+  {
+    "DisplayName": "Bowie-Knife",
+    "Category": "Knife",
+    "WeaponType": "Bowie_Knife",
+    "MarketQuery": "weapon_knife_survival_bowie"
+  },
+  {
+    "DisplayName": "Butterfly-Knife",
+    "Category": "Knife",
+    "WeaponType": "Butterfly_Knife",
+    "MarketQuery": "weapon_knife_butterfly"
+  },
+  {
+    "DisplayName": "Classic-Knife",
+    "Category": "Knife",
+    "WeaponType": "Classic_Knife",
+    "MarketQuery": "weapon_knife_css"
+  },
+  {
+    "DisplayName": "Falchion-Knife",
+    "Category": "Knife",
+    "WeaponType": "Falchion_Knife",
+    "MarketQuery": "weapon_knife_falchion"
+  },
+  {
+    "DisplayName": "Flip-Knife",
+    "Category": "Knife",
+    "WeaponType": "Flip_Knife",
+    "MarketQuery": "weapon_knife_flip"
+  },
+  {
+    "DisplayName": "Gut-Knife",
+    "Category": "Knife",
+    "WeaponType": "Gut_Knife",
+    "MarketQuery": "weapon_knife_gut"
+  },
+  {
+    "DisplayName": "Huntsman-Knife",
+    "Category": "Knife",
+    "WeaponType": "Huntsman_Knife",
+    "MarketQuery": "weapon_knife_tactical"
+  },
+  {
+    "DisplayName": "Karambit",
+    "Category": "Knife",
+    "WeaponType": "Karambit",
+    "MarketQuery": "weapon_knife_karambit"
+  },
+  {
+    "DisplayName": "Kukri-Knife",
+    "Category": "Knife",
+    "WeaponType": "Kukri_Knife",
+    "MarketQuery": "weapon_knife_kukri"
+  },
+  {
+    "DisplayName": "M9-Bayonet",
+    "Category": "Knife",
+    "WeaponType": "M9_Bayonet",
+    "MarketQuery": "weapon_knife_m9_bayonet"
+  },
+  {
+    "DisplayName": "Navaja-Knife",
+    "Category": "Knife",
+    "WeaponType": "Navaja_Knife",
+    "MarketQuery": "weapon_knife_gypsy_jackknife"
+  },
+  {
+    "DisplayName": "Nomad-Knife",
+    "Category": "Knife",
+    "WeaponType": "Nomad_Knife",
+    "MarketQuery": "weapon_knife_outdoor"
+  },
+  {
+    "DisplayName": "Paracord-Knife",
+    "Category": "Knife",
+    "WeaponType": "Paracord_Knife",
+    "MarketQuery": "weapon_knife_cord"
+  },
+  {
+    "DisplayName": "Shadow-Daggers",
+    "Category": "Knife",
+    "WeaponType": "Shadow_Daggers",
+    "MarketQuery": "weapon_knife_push"
+  },
+  {
+    "DisplayName": "Skeleton-Knife",
+    "Category": "Knife",
+    "WeaponType": "Skeleton_Knife",
+    "MarketQuery": "weapon_knife_skeleton"
+  },
+  {
+    "DisplayName": "Stiletto-Knife",
+    "Category": "Knife",
+    "WeaponType": "Stiletto_Knife",
+    "MarketQuery": "weapon_knife_stiletto"
+  },
+  {
+    "DisplayName": "Survival-Knife",
+    "Category": "Knife",
+    "WeaponType": "Survival_Knife",
+    "MarketQuery": "weapon_knife_canis"
+  },
+  {
+    "DisplayName": "Talon-Knife",
+    "Category": "Knife",
+    "WeaponType": "Talon_Knife",
+    "MarketQuery": "weapon_knife_widowmaker"
+  },
+  {
+    "DisplayName": "Ursus-Knife",
+    "Category": "Knife",
+    "WeaponType": "Ursus_Knife",
+    "MarketQuery": "weapon_knife_ursus"
+  }
+]
