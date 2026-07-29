@@ -1,6 +1,4 @@
-﻿using SteamMarketDeepSearch.Constants;
-using SteamMarketDeepSearch.Models;
-using System;
+﻿using SteamMarketDeepSearch.Models;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -8,15 +6,8 @@ namespace SteamMarketDeepSearch.Parsers
 {
     public static partial class SteamMarketParser
     {
-        private static readonly Regex listingRegex =
-            new(
-                $@"{SteamConstants.MarketBaseUrl}/{SteamConstants.AppId}/([^?""\\]+)",
-                RegexOptions.Compiled
-            );
-
-
-        private static readonly Regex skinNameRegex =
-            SkinNameRegex();
+        private static readonly Regex HashNameRegex =
+            GenerateHashNameRegex();
 
 
         public static List<MarketSkinData> ParseListings(string html)
@@ -24,35 +15,13 @@ namespace SteamMarketDeepSearch.Parsers
             List<MarketSkinData> results = [];
 
 
-            MatchCollection listings =
-                listingRegex.Matches(html);
-
-
-            foreach (Match listingMatch in listings)
+            foreach (Match match in HashNameRegex.Matches(html))
             {
-                string listingId =
-                    listingMatch.Groups[1].Value;
-
-
-                string remainingHtml =
-                    html[listingMatch.Index..];
-
-
-                Match nameMatch =
-                    skinNameRegex.Match(remainingHtml);
-
-
-                string skinName =
-                    nameMatch.Success
-                        ? nameMatch.Groups[1].Value.Trim()
-                        : string.Empty;
-
-
                 results.Add(
                     new MarketSkinData
                     {
-                        MarketListingId = listingId,
-                        MarketHashName = skinName
+                        MarketHashName =
+                            match.Groups[1].Value
                     });
             }
 
@@ -60,7 +29,10 @@ namespace SteamMarketDeepSearch.Parsers
             return results;
         }
 
-        [GeneratedRegex(@">([^<>]+ \| [^<>]+)<", RegexOptions.Compiled)]
-        private static partial Regex SkinNameRegex();
+
+        [GeneratedRegex(
+            @"market_hash_name\\\\\\?""?\\\\?""?[:\\]+\\\\?""?([^""\\]+)",
+            RegexOptions.Compiled)]
+        private static partial Regex GenerateHashNameRegex();
     }
 }
