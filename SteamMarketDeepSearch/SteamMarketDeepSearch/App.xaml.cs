@@ -12,8 +12,6 @@ namespace SteamMarketDeepSearch
     {
         private Window? _window;
 
-        public static Services.ScannerService ScannerService { get; private set; } = null!;
-
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -21,8 +19,6 @@ namespace SteamMarketDeepSearch
         public App()
         {
             InitializeComponent();
-
-            ScannerService = new Services.ScannerService();
 
             // DO NOT RUN THIS UNLESS YOU KNOW WHAT YOU ARE DOING, THIS WILL OVERWRITE THE CATALOG FILE AND CLEAR ALL CUSTOM MARKET QUERIES!!!
             // Services.CatalogGenerator.Generate();

@@ -24,15 +24,11 @@ namespace SteamMarketDeepSearch.Views
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private readonly Services.ScannerService _scanner;
-
         public MainPage()
         {
             InitializeComponent();
 
             Loaded += MainPage_Loaded;
-
-            _scanner = App.ScannerService;
         }
 
         private async void MainPage_Loaded(
