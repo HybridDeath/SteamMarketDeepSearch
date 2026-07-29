@@ -20,6 +20,8 @@ namespace SteamMarketDeepSearch
         {
             InitializeComponent();
 
+            SQLitePCL.Batteries.Init();
+
             // DO NOT RUN THIS UNLESS YOU KNOW WHAT YOU ARE DOING, THIS WILL OVERWRITE THE CATALOG FILE AND CLEAR ALL CUSTOM MARKET QUERIES!!!
             // Services.CatalogGenerator.Generate();
         }
