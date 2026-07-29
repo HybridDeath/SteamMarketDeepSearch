@@ -11,7 +11,7 @@ namespace SteamMarketDeepSearch.Services
     {
         public static string BuildListingUrl(string listingId)
         {
-            return $"{SteamConstants.MarketBaseUrl}/{SteamConstants.AppId}/{listingId}";
+            return $"{SteamMarketConstants.MarketBaseUrl}/{SteamMarketConstants.AppId}/{listingId}";
         }
     }
 }
