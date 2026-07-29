@@ -10,12 +10,10 @@ namespace SteamMarketDeepSearch.Services
     {
         private readonly string _connectionString;
 
-
         public DatabaseService()
         {
             string path =
                 @"C:\Users\Brydżu\source\repos\SteamMarketDeepSearch\SteamMarketDeepSearch\SteamMarketDeepSearch\Data\SkinsDatabase.db";
-
 
             _connectionString =
                 $"Data Source={path}";
@@ -27,19 +25,15 @@ namespace SteamMarketDeepSearch.Services
             return new SqliteConnection(_connectionString);
         }
 
-
         public async Task InitializeAsync()
         {
             await using SqliteConnection connection =
                 CreateConnection();
 
-
             await connection.OpenAsync();
-
 
             await using SqliteCommand command =
                 connection.CreateCommand();
-
 
             command.CommandText =
             """
@@ -65,7 +59,6 @@ namespace SteamMarketDeepSearch.Services
             ON Skins(MarketBucketId);
             """;
 
-
             await command.ExecuteNonQueryAsync();
         }
 
@@ -76,23 +69,18 @@ namespace SteamMarketDeepSearch.Services
             await using SqliteConnection connection =
                 CreateConnection();
 
-
             await connection.OpenAsync();
-
 
             await using SqliteTransaction transaction =
                 (SqliteTransaction)
                 await connection.BeginTransactionAsync();
-
 
             foreach (SkinDefinition skin in skins)
             {
                 await using SqliteCommand command =
                     connection.CreateCommand();
 
-
                 command.Transaction = transaction;
-
 
                 command.CommandText =
                 """
@@ -130,26 +118,21 @@ namespace SteamMarketDeepSearch.Services
                         excluded.LastUpdatedAt;
                 """;
 
-
                 command.Parameters.AddWithValue(
                     "@name",
                     skin.MarketHashName);
-
 
                 command.Parameters.AddWithValue(
                     "@weapon",
                     (int)skin.WeaponType);
 
-
                 command.Parameters.AddWithValue(
                     "@bucket",
                     skin.MarketBucketId);
 
-
                 command.Parameters.AddWithValue(
                     "@orders",
                     skin.SellOrderCount);
-
 
                 command.Parameters.AddWithValue(
                     "@created",
@@ -157,13 +140,11 @@ namespace SteamMarketDeepSearch.Services
                         .ToUniversalTime()
                         .ToString("O"));
 
-
                 command.Parameters.AddWithValue(
                     "@updated",
                     skin.LastUpdatedAt
                         .ToUniversalTime()
                         .ToString("O"));
-
 
                 await command.ExecuteNonQueryAsync();
             }
@@ -181,13 +162,10 @@ namespace SteamMarketDeepSearch.Services
             await using SqliteConnection connection =
                 CreateConnection();
 
-
             await connection.OpenAsync();
-
 
             await using SqliteCommand command =
                 connection.CreateCommand();
-
 
             command.CommandText =
             """
@@ -196,10 +174,8 @@ namespace SteamMarketDeepSearch.Services
             FROM Skins;
             """;
 
-
             await using SqliteDataReader reader =
                 await command.ExecuteReaderAsync();
-
 
             while (await reader.ReadAsync())
             {
@@ -231,7 +207,6 @@ namespace SteamMarketDeepSearch.Services
                                 reader.GetString(6))
                     });
             }
-
 
             return skins;
         }
