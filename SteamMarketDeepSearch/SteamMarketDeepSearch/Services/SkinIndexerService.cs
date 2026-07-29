@@ -4,6 +4,7 @@ using SteamMarketDeepSearch.Parsers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SteamMarketDeepSearch.Services
@@ -18,14 +19,13 @@ namespace SteamMarketDeepSearch.Services
             catalogService;
 
 
-        public async Task IndexSkinsAsync()
+        public async Task<SkinIndexResult> IndexSkinsAsync()
         {
             List<WeaponCatalogEntry> catalog =
                 await _catalogService.LoadAsync();
 
 
-            HashSet<string> uniqueSkins =
-                new(StringComparer.Ordinal);
+            List<SkinDefinition> indexedSkins = [];
 
 
             foreach (WeaponCatalogEntry weapon in catalog)
@@ -55,23 +55,46 @@ namespace SteamMarketDeepSearch.Services
                         continue;
                     }
 
+                    Debug.WriteLine(
+                        $"{skin.MarketHashName} | {skin.SellOrderCount} | {skin.MarketBucketId}");
+
 
                     string normalizedName =
                         NormalizeSkinName(
                             skin.MarketHashName);
 
 
-                    if (uniqueSkins.Add(normalizedName))
+                    if (!indexedSkins.Any(
+                        x => x.MarketHashName == normalizedName))
                     {
-                        Debug.WriteLine(
-                            $"{normalizedName}");
+                        indexedSkins.Add(
+                            new SkinDefinition
+                            {
+                                WeaponType = weapon.WeaponType,
+
+                                MarketHashName =
+                                    normalizedName,
+
+                                MarketBucketId =
+                                    skin.MarketBucketId,
+
+                                SellOrderCount =
+                                    skin.SellOrderCount,
+
+                                CreatedAt =
+                                    DateTime.UtcNow,
+
+                                LastUpdatedAt =
+                                    DateTime.UtcNow
+                            });
                     }
                 }
             }
 
-
-            Debug.WriteLine(
-                $"Unique skins: {uniqueSkins.Count}");
+            return new SkinIndexResult
+            {
+                Skins = indexedSkins
+            };
         }
 
         private static string NormalizeSkinName(string name)
