@@ -11,7 +11,7 @@ namespace SteamMarketDeepSearch.Models
 
         public WeaponType WeaponType { get; set; }
 
-        public string MarketListingId { get; set; } = string.Empty;
+        public string MarketBucketId { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; }
     }
