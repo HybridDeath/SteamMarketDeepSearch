@@ -1,4 +1,5 @@
 ﻿using SteamMarketDeepSearch.Constants;
+using SteamMarketDeepSearch.Infrastructure;
 using SteamMarketDeepSearch.Models;
 using SteamMarketDeepSearch.Parsers;
 using System;
@@ -25,7 +26,7 @@ namespace SteamMarketDeepSearch.Services
 
             List<SkinDefinition> indexedSkins = [];
 
-            HashSet<string> indexedNames = [];
+            HashSet<string> indexedSkinNames = [];
 
             foreach (WeaponCatalogEntry weapon in catalog)
             {
@@ -48,27 +49,22 @@ namespace SteamMarketDeepSearch.Services
 
                 foreach (MarketSkinData skin in skins)
                 {
-                    if (string.IsNullOrWhiteSpace(
-                        skin.MarketHashName))
+                    if (string.IsNullOrWhiteSpace(skin.MarketHashName))
                     {
                         continue;
                     }
 
 
-                    if (string.IsNullOrWhiteSpace(
-                        skin.MarketBucketId))
+                    if (string.IsNullOrWhiteSpace(skin.MarketBucketId))
                     {
                         continue;
                     }
 
 
-                    string normalizedName =
-                        NormalizeSkinName(
-                            skin.MarketHashName);
+                    string normalizedName = NormalizeSkinName(skin.MarketHashName);
 
 
-                    if (indexedNames.Contains(
-                        normalizedName))
+                    if (indexedSkinNames.Contains(normalizedName))
                     {
                         continue;
                     }
@@ -106,9 +102,9 @@ namespace SteamMarketDeepSearch.Services
                         });
 
 
-                    indexedNames.Add(
-                        normalizedName);
+                    indexedSkinNames.Add(normalizedName);
                 }
+                await Task.Delay(GlobalThrottling.GetMarketIndexDelay());
             }
 
 
