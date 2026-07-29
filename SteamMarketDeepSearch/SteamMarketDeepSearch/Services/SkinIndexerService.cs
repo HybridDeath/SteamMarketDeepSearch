@@ -1,6 +1,7 @@
 ﻿using SteamMarketDeepSearch.Constants;
 using SteamMarketDeepSearch.Models;
 using SteamMarketDeepSearch.Parsers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -23,44 +24,95 @@ namespace SteamMarketDeepSearch.Services
                 await _catalogService.LoadAsync();
 
 
+            HashSet<string> uniqueSkins =
+                new(StringComparer.Ordinal);
+
+
             foreach (WeaponCatalogEntry weapon in catalog)
             {
-                if (string.IsNullOrWhiteSpace(weapon.MarketQuery))
+                if (string.IsNullOrWhiteSpace(
+                    weapon.MarketQuery))
                 {
-                    Debug.WriteLine(
-                        $"Skipping {weapon.DisplayName}");
-
                     continue;
                 }
 
 
-                Debug.WriteLine(
-                    $"Processing {weapon.DisplayName}");
-
-
-                string baseUrl =
+                string url =
                     $"{SteamConstants.MarketSearchUrl}" +
                     $"?category_Weapon={weapon.MarketQuery}" +
                     $"&appid={SteamConstants.AppId}";
 
 
-                Debug.WriteLine(baseUrl);
-
-
                 List<MarketSkinData> skins =
-                    await DownloadAllPagesAsync(baseUrl);
+                    await DownloadAllPagesAsync(url);
 
 
-                Debug.WriteLine(
-                    $"Found total {skins.Count} skins");
+                foreach (MarketSkinData skin in skins)
+                {
+                    if (string.IsNullOrWhiteSpace(
+                        skin.MarketHashName))
+                    {
+                        continue;
+                    }
+
+
+                    string normalizedName =
+                        NormalizeSkinName(
+                            skin.MarketHashName);
+
+
+                    if (uniqueSkins.Add(normalizedName))
+                    {
+                        Debug.WriteLine(
+                            $"{normalizedName}");
+                    }
+                }
             }
 
 
             Debug.WriteLine(
-                "Indexing finished.");
+                $"Unique skins: {uniqueSkins.Count}");
         }
 
+        private static string NormalizeSkinName(string name)
+        {
+            // Usuwanie StatTrak
+            name = name.Replace(
+                "StatTrak™ ",
+                "",
+                StringComparison.Ordinal);
 
+
+            // Usuwanie Souvenir
+            name = name.Replace(
+                "Souvenir ",
+                "",
+                StringComparison.Ordinal);
+
+
+            // Usuwanie wear condition
+            string[] conditions =
+            [
+                " (Factory New)",
+                " (Minimal Wear)",
+                " (Field-Tested)",
+                " (Well-Worn)",
+                " (Battle-Scarred)"
+            ];
+
+
+            foreach (string condition in conditions)
+            {
+                if (name.EndsWith(condition))
+                {
+                    name = name[..^condition.Length];
+                    break;
+                }
+            }
+
+
+            return name.Trim();
+        }
 
         private async Task<List<MarketSkinData>> DownloadAllPagesAsync(
             string url)
@@ -75,24 +127,16 @@ namespace SteamMarketDeepSearch.Services
 
             while (true)
             {
-                string pagedUrl =
+                string pageUrl =
                     $"{url}&start={start}&count={pageSize}";
 
 
-                Debug.WriteLine(
-                    $"Downloading page: start={start}");
-
-
                 string html =
-                    await _client.GetMarketPageAsync(pagedUrl);
+                    await _client.GetMarketPageAsync(pageUrl);
 
 
                 List<MarketSkinData> page =
                     SteamMarketParser.ParseListings(html);
-
-
-                Debug.WriteLine(
-                    $"Page results: {page.Count}");
 
 
                 if (page.Count == 0)
