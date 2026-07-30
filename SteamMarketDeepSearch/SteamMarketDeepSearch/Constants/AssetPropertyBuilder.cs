@@ -32,7 +32,7 @@ namespace SteamMarketDeepSearch.Constants
                 foreach (string wear in FloatFilters)
                 {
                     yield return
-                        $"assetproperty={Uri.EscapeDataString(paint)}&" +
+                        $"assetproperty={Uri.EscapeDataString(paint)}&"+
                         $"assetproperty={Uri.EscapeDataString(wear)}";
                 }
             }
