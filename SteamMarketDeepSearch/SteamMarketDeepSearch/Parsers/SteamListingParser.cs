@@ -88,31 +88,6 @@ namespace SteamMarketDeepSearch.Parsers
                     "\\\\\\\"asset\\\\\\\":",
                     StringComparison.Ordinal);
 
-            foreach (string marker in new[]
-            {
-                "seed"
-            })
-            {
-                int index =
-                    data.IndexOf(
-                        marker,
-                        StringComparison.OrdinalIgnoreCase);
-
-
-                Debug.WriteLine(
-                    $"{marker}: {index}");
-
-
-                if (index >= 0)
-                {
-                    Debug.WriteLine(
-                        data.Substring(
-                            Math.Max(0, index - 200),
-                            400));
-                }
-            }
-
-
             if (assetIndex < 0)
             {
                 return null;
