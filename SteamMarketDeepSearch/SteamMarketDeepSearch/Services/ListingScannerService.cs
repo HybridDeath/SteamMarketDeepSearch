@@ -2,7 +2,9 @@
 using SteamMarketDeepSearch.Infrastructure;
 using SteamMarketDeepSearch.Models;
 using SteamMarketDeepSearch.Parsers;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace SteamMarketDeepSearch.Services
@@ -17,49 +19,66 @@ namespace SteamMarketDeepSearch.Services
         private readonly SteamMarketClient _client =
             client;
 
-        public async Task<List<MarketListingData>> ScanAllBucketsAsync()
+        public async Task ScanAllBucketsAsync(
+            Action<List<MarketListingData>> onListingsFound)
         {
-            List<MarketListingData> result = [];
-
             List<SkinDefinition> buckets =
                 await _database.GetAllBucketsDescAsync();
+
 
             foreach (SkinDefinition bucket in buckets)
             {
                 List<MarketListingData> listings =
                     await ScanBucketAsync(bucket);
 
-                result.AddRange(listings);
+
+                if (listings.Count > 0)
+                {
+                    onListingsFound(listings);
+                }
+
 
                 await Task.Delay(
                     GlobalThrottling.GetMarketScanDelay());
             }
-
-            return result;
         }
 
-        private async Task<List<MarketListingData>> ScanBucketAsync(
-            SkinDefinition skin)
+        private async Task<List<MarketListingData>> ScanBucketAsync(SkinDefinition skin)
         {
-            string url =
-                $"{SteamMarketConstants.MarketBaseUrl}/730/" +
-                $"{skin.MarketBucketId}" +
-                $"?appid={SteamMarketConstants.AppId}";
+            List<MarketListingData> result = [];
 
 
-            string html =
-                await _client.GetMarketPageAsync(url);
-
-
-            if (!html.Contains("\\\\\\\"listingid\\\\\\\""))
+            foreach (string assetProperty in AssetPropertyBuilder.BuildAssetProperties())
             {
-                return [];
+                string url =
+                    $"{SteamMarketConstants.MarketBaseUrl}/730/" +
+                    $"{skin.MarketBucketId}" +
+                    $"?appid={SteamMarketConstants.AppId}&" +
+                    assetProperty;
+
+                string html =
+                    await _client.GetMarketPageAsync(url);
+
+                if (!html.Contains("\\\\\\\"listingid\\\\\\\""))
+                {
+                    await Task.Delay(
+                        GlobalThrottling.GetMarketScanDelay());
+
+                    Debug.WriteLine($"Scanning bucket {skin.MarketBucketId} failed! HTML Length: {html.Length}");
+
+                    continue;
+                }
+
+                List<MarketListingData> listings =
+                    SteamListingParser.Parse(
+                        html,
+                        skin.MarketBucketId);
+
+                result.AddRange(
+                    listings);
             }
 
-
-            return SteamListingParser.Parse(
-                html,
-                skin.MarketBucketId);
+            return result;
         }
     }
 }

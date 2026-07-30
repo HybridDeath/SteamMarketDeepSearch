@@ -8,14 +8,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace SteamMarketDeepSearch.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
         public static readonly SteamMarketClient client =
@@ -38,14 +32,14 @@ namespace SteamMarketDeepSearch.Views
             InitializeComponent();
         }
 
-        private async void IndexButton_Click(object sender, RoutedEventArgs e)
+        private async void IndexButton_Click(
+            object sender,
+            RoutedEventArgs e)
         {
             Debug.WriteLine(
                 "INDEX LOOP STARTED");
 
-
             await database.InitializeAsync();
-
 
             while (true)
             {
@@ -54,14 +48,11 @@ namespace SteamMarketDeepSearch.Views
                     SkinIndexResult result =
                         await indexer.IndexSkinsAsync();
 
-
                     await database.UpsertSkinsAsync(
                         result.Skins);
 
-
                     Debug.WriteLine(
                         $"Indexed: {result.TotalSkins}");
-
 
                     LowestText.Text =
                         result.LowestSupply == null
@@ -69,7 +60,6 @@ namespace SteamMarketDeepSearch.Views
                         :
                         $"{result.LowestSupply.MarketHashName}\n" +
                         $"Offers: {result.LowestSupply.SellOrderCount}";
-
 
                     HighestText.Text =
                         result.HighestSupply == null
@@ -83,88 +73,63 @@ namespace SteamMarketDeepSearch.Views
                     Debug.WriteLine(
                         "INDEX LOOP ERROR:");
 
-                    Debug.WriteLine(
-                        ex);
+                    Debug.WriteLine(ex);
                 }
-
 
                 await Task.Delay(
                     TimeSpan.FromSeconds(10));
             }
         }
 
-        private async void ScanButton_Click(object sender, RoutedEventArgs e)
+        private async void ScanButton_Click(
+            object sender,
+            RoutedEventArgs e)
         {
             DebugText.Text =
-                "L2 scan started...";
+                "L2 full bucket scan started...";
 
+            string resultPath =
+                Path.Combine(
+                    Environment.GetFolderPath(
+                        Environment.SpecialFolder.Desktop),
+                    "steam_l2_results.txt");
 
             try
             {
-                (List<MarketListingData> listings, string html) =
-                    await scanner.ScanLargestBucketAsync();
-
-
-                Debug.WriteLine(
-                    $"Received listings: {listings.Count}");
-
-
-                string htmlPath =
-                    Path.Combine(
-                        Environment.GetFolderPath(
-                            Environment.SpecialFolder.Desktop),
-                        "steam_l2_dump.html");
-
-
-                await File.WriteAllTextAsync(
-                    htmlPath,
-                    html);
-
-
-                Debug.WriteLine(
-                    $"HTML saved: {htmlPath}");
-
-                Debug.WriteLine(
-                    $"HTML size: {html.Length:N0} chars");
-
-
-                string resultPath =
-                    Path.Combine(
-                        Environment.GetFolderPath(
-                            Environment.SpecialFolder.Desktop),
-                        "steam_l2_results.txt");
-
+                await database.InitializeAsync();
 
                 using StreamWriter writer =
                     new(resultPath);
 
+                await scanner.ScanAllBucketsAsync(
+                    listings =>
+                    {
+                        foreach (MarketListingData listing in listings)
+                        {
+                            string output =
+                                "\n\nFOUND COMBO!" +
+                                $"\nListingId: {listing.ListingId}" +
+                                $"\nPaintSeed: {listing.PaintSeed}" +
+                                $"\nWear: {listing.WearValue}" +
+                                $"\nPrice: {listing.Price}" +
+                                $"\n{listing.InspectLink}";
 
-                foreach (MarketListingData listing in listings)
+                            writer.WriteLine(output);
+
+                            DispatcherQueue.TryEnqueue(() =>
+                            {
+                                DebugText.Text += output;
+                            });
+                        }
+                    });
+
+                await writer.FlushAsync();
+
+                DispatcherQueue.TryEnqueue(() =>
                 {
-                    await writer.WriteLineAsync(
-                        $"ListingId: {listing.ListingId}");
-
-                    await writer.WriteLineAsync(
-                        $"PaintSeed: {listing.PaintSeed}");
-
-                    await writer.WriteLineAsync(
-                        $"Wear: {listing.WearValue}");
-
-                    await writer.WriteLineAsync(
-                        $"InspectLink: {listing.InspectLink}");
-
-                    await writer.WriteLineAsync(
-                        $"Price: {listing.Price}");
-
-                    await writer.WriteLineAsync();
-                }
-
-
-                DebugText.Text =
-                    $"HTML:\n{htmlPath}\n\n" +
-                    $"Results:\n{resultPath}\n\n" +
-                    $"HTML size: {html.Length:N0}\n" +
-                    $"Listings: {listings.Count}";
+                    DebugText.Text +=
+                        "\n\nSCAN FINISHED.";
+                });
             }
             catch (Exception ex)
             {
