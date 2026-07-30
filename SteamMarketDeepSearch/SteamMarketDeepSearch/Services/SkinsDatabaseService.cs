@@ -212,6 +212,63 @@ namespace SteamMarketDeepSearch.Services
             };
         }
 
+        public async Task<List<SkinDefinition>> GetAllBucketsDescAsync()
+        {
+            List<SkinDefinition> allOrderedBuckets = [];
+
+            await using SqliteConnection connection =
+                CreateConnection();
+
+            await connection.OpenAsync();
+
+            await using SqliteCommand command =
+                connection.CreateCommand();
+
+            command.CommandText =
+            """
+            SELECT
+                *
+            FROM Skins
+            ORDER BY SellOrderCount DESC;
+            """;
+
+            await using SqliteDataReader reader =
+                await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                allOrderedBuckets.Add(
+                    new SkinDefinition
+                    {
+                        Id =
+                            reader.GetInt64(0),
+
+                        MarketHashName =
+                            reader.GetString(1),
+
+                        WeaponType =
+                            (Enums.WeaponType)
+                            reader.GetInt32(2),
+
+                        MarketBucketId =
+                            reader.GetString(3),
+
+                        SellOrderCount =
+                            reader.GetInt32(4),
+
+                        CreatedAt =
+                            DateTime.Parse(
+                                reader.GetString(5)),
+
+                        LastUpdatedAt =
+                            DateTime.Parse(
+                                reader.GetString(6))
+                    });
+            }
+
+            return allOrderedBuckets;
+        }
+
         public async Task<List<SkinDefinition>> GetAllSkinsAsync()
         {
             List<SkinDefinition> skins = [];
