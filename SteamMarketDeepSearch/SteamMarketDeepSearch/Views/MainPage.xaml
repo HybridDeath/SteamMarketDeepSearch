@@ -8,7 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto" Padding="15">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*"
+      Padding="15">
 
         <Button
         Grid.Row="0"
@@ -16,20 +17,31 @@
         Content="Index all skins"
         Click="IndexButton_Click"/>
 
-        <TextBlock
-            Grid.Row="1"
-            x:Name="LowestText"
-        />
+
+        <Button
+        Grid.Row="1"
+        x:Name="ScanButton"
+        Content="Scan largest bucket"
+        Click="ScanButton_Click"/>
+
 
         <TextBlock
-            Grid.Row="2"
-            x:Name="HighestText"
-        />
+        Grid.Row="2"
+        x:Name="LowestText"/>
+
 
         <TextBlock
-            Grid.Row="3"
-            x:Name="DebugText"
-        />
+        Grid.Row="3"
+        x:Name="HighestText"/>
 
+
+        <TextBox
+        Grid.Row="4"
+        x:Name="DebugText"
+        AcceptsReturn="True"
+        TextWrapping="NoWrap"
+        IsReadOnly="True"
+        ScrollViewer.VerticalScrollBarVisibility="Auto"
+        ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
     </Grid>
 </Page>

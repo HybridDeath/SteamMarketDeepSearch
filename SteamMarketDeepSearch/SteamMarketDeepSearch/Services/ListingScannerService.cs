@@ -1,83 +1,106 @@
 ﻿using SteamMarketDeepSearch.Constants;
 using SteamMarketDeepSearch.Infrastructure;
 using SteamMarketDeepSearch.Models;
+using SteamMarketDeepSearch.Parsers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SteamMarketDeepSearch.Services
 {
-    public class ListingScannerService(DatabaseService database, SteamMarketClient client)
+    public class ListingScannerService(SkinsDatabaseService database, SteamMarketClient client)
     {
-        private readonly DatabaseService _database = database;
+        private readonly SkinsDatabaseService _database = database;
 
         private readonly SteamMarketClient _client = client;
 
-        public async Task ScanAsync()
+        public async Task<(List<MarketListingData> Listings, string Html)> ScanLargestBucketAsync()
         {
-            List<SkinDefinition> skins =
-                await _database.GetAllSkinsAsync();
+            SkinDefinition? skin =
+                await _database.GetLargestSkinBucketAsync();
 
 
-            Debug.WriteLine(
-                $"L2 START. Buckets (skins): {skins.Count}");
-
-
-            foreach (SkinDefinition skin in skins)
+            if (skin == null)
             {
-                if (string.IsNullOrWhiteSpace(
-                    skin.MarketBucketId))
-                {
-                    continue;
-                }
+                Debug.WriteLine(
+                    "No skins found in database.");
 
-
-                await ScanBucketAsync(
-                    skin);
+                return ([], "");
             }
 
 
             Debug.WriteLine(
-                "L2 FINISHED");
+                $"L2 TEST BUCKET:");
+
+            Debug.WriteLine(
+                $"{skin.MarketHashName} | " +
+                $"Offers: {skin.SellOrderCount}");
+
+            Debug.WriteLine("L2 FINISHED");
+
+            return await ScanBucketAsync(skin);
         }
 
 
-        private async Task ScanBucketAsync(SkinDefinition skin)
+        private async Task<(List<MarketListingData> Listings, string Html)> ScanBucketAsync(SkinDefinition skin)
         {
             Debug.WriteLine(
-                $"Scanning bucket: {skin.MarketBucketId}");
+                $"Scanning bucket: {skin.MarketHashName}");
 
 
-            foreach (string filter in AssetPropertyBuilder.BuildAssetProperties())
+            string url =
+                $"{SteamMarketConstants.MarketBaseUrl}/730/" +
+                $"{skin.MarketBucketId}" +
+                $"?appid={SteamMarketConstants.AppId}";
+
+
+            Debug.WriteLine(url);
+
+
+            string html =
+                await _client.GetMarketPageAsync(url);
+
+
+            if (!html.Contains("\\\\\\\"listingid\\\\\\\""))
             {
-                string url =
-                    $"{SteamMarketConstants.MarketBaseUrl}/730/" +
-                    $"{skin.MarketBucketId}" +
-                    $"?appid={SteamMarketConstants.AppId}" +
-                    $"&{filter}";
+                Debug.WriteLine(
+                    "HTML does not contain listings. Retrying...");
 
+
+                await Task.Delay(2000);
+
+
+                html =
+                    await _client.GetMarketPageAsync(url);
+            }
+
+
+            List<MarketListingData> listings =
+                SteamListingParser.Parse(
+                    html,
+                    skin.MarketBucketId);
+
+
+            Debug.WriteLine(
+                $"Parsed listings: {listings.Count}");
+
+
+            foreach (MarketListingData listing in listings.Take(5))
+            {
+                Debug.WriteLine(
+                    $"ID: {listing.ListingId} | " +
+                    $"Paint: {listing.PaintSeed} | " +
+                    $"Float: {listing.WearValue} | " +
+                    $"Price: {listing.Price}");
 
                 Debug.WriteLine(
-                    url);
-
-
-                string html =
-                    await _client.GetMarketPageAsync(
-                        url);
-
-
-                /*
-                 * TODO:
-                 *
-                 * ListingParser.Parse(html)
-                 *
-                 * ListingDatabaseService.Save(...)
-                 */
-
-
-                await Task.Delay(GlobalThrottling.GetMarketScanDelay());
+                    listing.InspectLink);
             }
+
+
+            return (listings, html);
         }
     }
 }
