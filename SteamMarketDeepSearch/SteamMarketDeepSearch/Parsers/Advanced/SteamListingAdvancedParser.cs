@@ -71,21 +71,18 @@ namespace SteamMarketDeepSearch.Parsers.Advanced
                 switch (propertyId)
                 {
                     case 1:
-                        result.PaintSeed =
-                            int.Parse(
-                                property.GetProperty("int_value").GetString() ?? "0");
+                        result.PaintSeed = int.Parse(property.GetProperty("int_value").GetString() ?? "0");
                         break;
 
 
                     case 2:
-                        result.WearValue =
-                            property.GetProperty("float_value").GetSingle();
+                        result.WearValue = property.GetProperty("float_value").GetDouble();
+                        result.WearText = property.GetProperty("float_value").GetRawText();
                         break;
 
 
                     case 6:
-                        result.PaintToken =
-                            property.GetProperty("string_value").GetString() ?? string.Empty;
+                        result.PaintToken = property.GetProperty("string_value").GetString() ?? string.Empty;
                         break;
                 }
             }

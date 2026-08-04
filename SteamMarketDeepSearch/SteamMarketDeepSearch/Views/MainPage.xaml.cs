@@ -4,6 +4,7 @@ using SteamMarketDeepSearch.Clients;
 using SteamMarketDeepSearch.Clients.Advanced;
 using SteamMarketDeepSearch.Constants;
 using SteamMarketDeepSearch.Models;
+using SteamMarketDeepSearch.Models.Advanced;
 using SteamMarketDeepSearch.Services;
 using SteamMarketDeepSearch.Services.Advanced;
 using System;
@@ -206,36 +207,55 @@ namespace SteamMarketDeepSearch.Views
             {
                 await database.InitializeAsync();
 
-                SkinDefinition? largestBucket = await database.GetLargestSkinBucketAsync();
+                SkinDefinition? largestBucket =
+                    await database.GetLargestSkinBucketAsync();
 
                 if (largestBucket == null)
                 {
                     L3DebugText.Text +=
-                        "No bucket found.";
+                        "\nNo bucket found.";
 
                     return;
                 }
 
                 L3DebugText.Text +=
-                    $"Bucket:\n{largestBucket.MarketBucketId}" +
+                    $"\nBucket:\n{largestBucket.MarketBucketId}" +
                     $"\n\nMarketHashName:\n{largestBucket.MarketHashName}" +
                     $"\n\nStored offers:\n{largestBucket.SellOrderCount}" +
                     "\n\nSending request...";
 
-                var result = await advancedScanner.ScanBucketAsync(largestBucket.MarketBucketId);
+
+                AdvancedBucketScanResult result =
+                    await advancedScanner.ScanBucketAsync(
+                        largestBucket.MarketBucketId);
+
 
                 L3DebugText.Text +=
-                    $"\n\nResponse received." +
-                    $"\n\nStart:\n{result.Start}" +
-                    $"\nTotalCount:\n{result.TotalCount}" +
-                    $"\nListings:\n{result.Listings.Count}";
+                    "\n\nResponse received." +
+                    $"\n\nBucketId:\n{result.BucketId}" +
+                    $"\n\nTotal listings after Steam filter:\n{result.TotalListingsFound}" +
+                    $"\nPaintSeed matches:\n{result.PaintSeedMatches}" +
+                    $"\nWear matches:\n{result.WearMatches}" +
+                    $"\n\nFinal combinations:\n{result.Listings.Count}";
+
+
+                foreach (AdvancedListingData listing in result.Listings)
+                {
+                    L3DebugText.Text +=
+                        "\n\nFOUND COMBO!" +
+                        $"\nListingId: {listing.ListingId}" +
+                        $"\nAssetId: {listing.AssetId}" +
+                        $"\nPaintSeed: {listing.PaintSeed}" +
+                        $"\nWear: {listing.WearText}" +
+                        $"\nPaintToken: {listing.PaintToken}";
+                }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
 
                 L3DebugText.Text +=
-                    ex.ToString();
+                    "\n\n" + ex;
 
                 L3DebugText.Text +=
                     "\n\nL3 scan failed.";

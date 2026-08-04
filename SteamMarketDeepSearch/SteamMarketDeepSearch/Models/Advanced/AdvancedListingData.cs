@@ -5,7 +5,8 @@
         public string ListingId { get; set; } = string.Empty;
         public string AssetId { get; set; } = string.Empty;
         public int PaintSeed { get; set; }
-        public float WearValue { get; set; }
+        public double WearValue { get; set; }
+        public string WearText { get; set; } = string.Empty;
         public string PaintToken { get; set; } = string.Empty;
     }
 }
