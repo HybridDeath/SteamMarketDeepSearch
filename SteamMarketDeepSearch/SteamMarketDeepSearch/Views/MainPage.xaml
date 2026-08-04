@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Page
     x:Class="SteamMarketDeepSearch.Views.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -8,40 +7,122 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*"
-      Padding="15">
+    <Grid
+        Padding="15"
+        ColumnSpacing="15">
 
-        <Button
-        Grid.Row="0"
-        x:Name="IndexButton"
-        Content="Index all skins"
-        Click="IndexButton_Click"/>
+        <Grid.ColumnDefinitions>
 
+            <ColumnDefinition
+                Width="*" />
 
-        <Button
-        Grid.Row="1"
-        x:Name="ScanButton"
-        Content="Scan largest bucket"
-        Click="ScanButton_Click"/>
+            <ColumnDefinition
+                Width="*" />
+
+        </Grid.ColumnDefinitions>
 
 
-        <TextBlock
-        Grid.Row="2"
-        x:Name="LowestText"/>
+        <!-- ========================================================= -->
+        <!-- LEFT PANEL (L2)                                            -->
+        <!-- ========================================================= -->
+
+        <Grid
+            Grid.Column="0"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,*">
+
+            <Button
+                Grid.Row="0"
+                x:Name="IndexButton"
+                Content="Index all skins"
+                Padding="10"
+                Margin="0,0,0,10"
+                Click="IndexButton_Click"/>
 
 
-        <TextBlock
-        Grid.Row="3"
-        x:Name="HighestText"/>
+            <Button
+                Grid.Row="1"
+                x:Name="ScanButton"
+                Content="Scan largest bucket"
+                Padding="10"
+                Margin="0,0,0,10"
+                Click="ScanButton_Click"/>
 
 
-        <TextBox
-        Grid.Row="4"
-        x:Name="DebugText"
-        AcceptsReturn="True"
-        TextWrapping="NoWrap"
-        IsReadOnly="True"
-        ScrollViewer.VerticalScrollBarVisibility="Auto"
-        ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+            <StackPanel
+                Grid.Row="2"
+                Orientation="Horizontal"
+                Spacing="10"
+                Padding="0,10">
+
+                <TextBox
+                    x:Name="BucketIdText"
+                    Width="250"
+                    Padding="10"
+                    PlaceholderText="Bucket ID"/>
+
+
+                <Button
+                    Content="Download HTML"
+                    Padding="10"
+                    Click="DownloadHtmlButton_Click"/>
+
+            </StackPanel>
+
+
+            <TextBlock
+                Grid.Row="3"
+                x:Name="LowestText"
+                Padding="10"/>
+
+
+            <TextBlock
+                Grid.Row="4"
+                x:Name="HighestText"
+                Padding="10"/>
+
+
+            <TextBox
+                Grid.Row="5"
+                x:Name="DebugText"
+                Margin="0,10,0,0"
+                Padding="10"
+                AcceptsReturn="True"
+                TextWrapping="NoWrap"
+                IsReadOnly="True"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+
+        </Grid>
+
+
+        <!-- ========================================================= -->
+        <!-- RIGHT PANEL (L3)                                           -->
+        <!-- ========================================================= -->
+
+        <Grid
+            Grid.Column="1"
+            RowDefinitions="Auto,*">
+            <Button
+                Grid.Row="0"
+                x:Name="L3ScanButton"
+                Content="Scan Largest Bucket (L3)"
+                Padding="10"
+                Margin="0,0,0,10"
+                Click="L3ScanButton_Click"/>
+            
+            <TextBox
+                Grid.Row="1"
+                x:Name="L3DebugText"
+                Padding="10"
+                AcceptsReturn="True"
+                TextWrapping="NoWrap"
+                IsReadOnly="True"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+        </Grid>
     </Grid>
 </Page>

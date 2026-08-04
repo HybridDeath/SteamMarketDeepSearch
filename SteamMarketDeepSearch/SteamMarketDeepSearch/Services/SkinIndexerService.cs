@@ -1,4 +1,5 @@
-﻿using SteamMarketDeepSearch.Constants;
+﻿using SteamMarketDeepSearch.Clients;
+using SteamMarketDeepSearch.Constants;
 using SteamMarketDeepSearch.Infrastructure;
 using SteamMarketDeepSearch.Models;
 using SteamMarketDeepSearch.Parsers;
@@ -170,7 +171,6 @@ namespace SteamMarketDeepSearch.Services
 
 
             const int pageSize = 100;
-
 
             while (true)
             {

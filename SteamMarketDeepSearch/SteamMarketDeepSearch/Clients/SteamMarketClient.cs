@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace SteamMarketDeepSearch.Services
+namespace SteamMarketDeepSearch.Clients
 {
     public class SteamMarketClient
     {
